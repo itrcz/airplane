@@ -1,39 +1,21 @@
+import { Block, Button, Flexbox, Grid, Header, Meter, Text, Viewport } from '@stage-ui/core'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom'
-import { Engine, EngineResources, EngineState } from './engine/Engine'
-import { Viewport, Flexbox, Block, Text, Grid, Meter, Header, Button } from '@stage-ui/core'
+import { Engine, EngineState } from './engine/Engine'
+import levels from './levels'
 
 let engine: Engine
-const resources: EngineResources = {
-  player: {
-    class: 'Zeppelin',
-  },
-  backgrounds: [
-    { class: 'Background', src: '/assets/hills_01.svg', height: 600 },
-    { class: 'Background', src: '/assets/hills_02.svg', height: 200 },
-    { class: 'Background', src: '/assets/hills_03.svg', height: 150, speedMultiplexor: 1.2 },
-    { class: 'Background', src: '/assets/hills_04.svg', height: 450, speedMultiplexor: 1.3, opacity: 0.2, blur: 2 },
-    { class: 'Background', src: '/assets/hills_05.svg', height: 23 },
-    { class: 'Background', src: '/assets/hills_05.svg', height: 23 }
-  ],
-  skyObjects: [
-    { class: 'JetYellow', delay: 50 },
-    { class: 'JetYellow', delay: 200 },
-    { class: 'JetBlue', delay: 300 },
-    { class: 'SkyObject', src:'/assets/star_01.svg', type: 'SPEED_BOOST', speed: 1, width: 32, height: 32, delay: 1000 },
-  ],
-  groudObjects: [
-    { class: 'GroudObject', src: '/assets/house_01.svg', width: 85, height: 55, speedMultiplexor: 1.3 },
-    { class: 'GroudObject', src: '/assets/house_02.svg', width: 85, height: 55, speedMultiplexor: 1.3, delay: 100 },
-  ]
-}
 
 function App() {
   const [engineState, setEngineState] = useState<EngineState | null>(null)
   const ref = useRef<HTMLCanvasElement>(null)
 
   const start = () => {
-    engine?.init(resources)
+    if (Math.random() > 0.1) {
+      engine?.init(levels.mountains)
+    } else {
+      engine?.init(levels.city)
+    }
   }
 
   useEffect(() => {
@@ -79,7 +61,7 @@ function App() {
             }}
           >
             <Header color="white">Game Over</Header>
-            <Button onClick={start} mt="m">Try again</Button>
+            <Button onClick={() => start()} mt="m">Try again</Button>
           </Flexbox>
         </Block>
       </Flexbox>

@@ -8,12 +8,14 @@ export type SkyObjectOptions = SpriteOptions & {
   delay?: number
   speed?: number
   type?: SkyObjectType
+  bouncing?: boolean
 }
 
 export class SkyObject extends Sprite {
   id = utils.id
   type: SkyObjectType = 'SPEED_DECRESE'
-
+  bouncing = false
+  
   static SkyObject = ({ 
     SkyObject: (engine: Engine, options: SkyObjectOptions) => new SkyObject(engine, options)
   })
@@ -28,12 +30,9 @@ export class SkyObject extends Sprite {
     super(engine, options)
     this.initialDelay = options.delay || 0
     this.delay = this.initialDelay
-    if (options.speed) {
-      this.speed = options.speed
-    }
-    if (options.type) {
-      this.type = options.type
-    }
+    this.speed = options.speed || this.speed
+    this.type = options.type || this.type
+    this.bouncing = options.bouncing || this.bouncing
   }
   
   get bounds() {
@@ -59,7 +58,8 @@ export class SkyObject extends Sprite {
   }
 
   update() {
-    const { img, x , y } = this
+    let { y } = this
+    const { img, x, bouncing } = this
     if (this.crashing) {
       if (this.type === 'SPEED_BOOST') {
         this.y -= 10
@@ -70,6 +70,9 @@ export class SkyObject extends Sprite {
       this.y += this.verticalSpeed
     }
     if (x > -img.width) {
+      if (bouncing && !this.crashing) {
+        y = y + Math.sin(x / 80) * 10
+      }
       this.engine.ctx.drawImage(img, x, y, img.width, img.height)
       this.x += -(this.speed + this.engine.player.speed / 2)
     } else {
