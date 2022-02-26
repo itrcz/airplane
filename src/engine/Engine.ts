@@ -118,21 +118,24 @@ export class Engine {
     }
   }
 
+  protected control(state: boolean) {
+    if (this.state.ready && !this.state.gameOver) {
+      this.player.goUp(state)
+      this.log(`Control ${state ? 'UP' : 'DOWN'}`)
+    }
+  }
+  
   protected attachEvents() {
+    this.canvas.addEventListener('mousedown', () => this.control(true))
+    this.canvas.addEventListener('mouseup', () => this.control(false))
+    this.canvas.addEventListener("touchstart", () => this.control(true))
+    this.canvas.addEventListener("touchend", () => this.control(false))
     window.addEventListener('keydown', (e) => {
-      if (this.state.ready && !this.state.gameOver) {
-        if (e.code === 'Space') {
-          this.player.goUp(true)
-          this.log('Space down')
-        }
+      if (e.code === 'Space') {
+        this.control(true)
       }
     })
-    window.addEventListener('keyup', (e) => {
-      if (this.state.ready && !this.state.gameOver) {
-        this.player.goUp(false)
-        this.log('Space up')
-      }
-    })
+    window.addEventListener('keyup', (e) => this.control(false))
   }
 
   protected watchState() {
