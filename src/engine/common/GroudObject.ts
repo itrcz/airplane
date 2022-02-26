@@ -4,6 +4,7 @@ import { utils } from '../utils'
 
 export type GroudObjectOptions = SpriteOptions & {
   delay?: number
+  speedMultiplexor?: number
 }
 
 export class GroudObject extends Sprite {
@@ -11,12 +12,14 @@ export class GroudObject extends Sprite {
   static GroudObject = ({ 
     GroudObject: (engine: Engine, options: GroudObjectOptions) => new GroudObject(engine, options)
   })
+  private speedMultiplexor = 1
   delay = 0
   x = -999
   y = -999
   constructor(engine: Engine, options: GroudObjectOptions) {
     super(engine, options)
     this.delay = options.delay || 0
+    this.speedMultiplexor = options.speedMultiplexor || 1
   }
   
   get bounds() {
@@ -39,7 +42,7 @@ export class GroudObject extends Sprite {
     const { img, x , y } = this
     if (x > -img.width) {
       this.engine.ctx.drawImage(img, x, y, img.width, img.height)
-      this.x += -this.engine.player.speed * 1.3
+      this.x += -this.engine.player.speed * this.speedMultiplexor
     } else {
       this.delay--
     }

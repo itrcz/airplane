@@ -6,6 +6,7 @@ export type SkyObjectType = 'SPEED_DECRESE' | 'SPEED_BOOST'
 
 export type SkyObjectOptions = SpriteOptions & {
   delay?: number
+  speed?: number
   type?: SkyObjectType
 }
 
@@ -27,6 +28,9 @@ export class SkyObject extends Sprite {
     super(engine, options)
     this.initialDelay = options.delay || 0
     this.delay = this.initialDelay
+    if (options.speed) {
+      this.speed = options.speed
+    }
     if (options.type) {
       this.type = options.type
     }
