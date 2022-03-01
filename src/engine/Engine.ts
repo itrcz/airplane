@@ -17,6 +17,10 @@ export type EngineState = {
    */
   running: boolean
   /**
+   * frames per secods
+   */
+  fps: number
+  /**
    * Horizontal speed in km/h
    */
   playerSpeed: number
@@ -61,6 +65,13 @@ export type EngineOptions = {
 
 export class Engine {
   debug?: boolean
+  private framerateControl = {
+    target: 1000 / 60,
+    now: 0,
+    elapsed: 0,
+    then: 0,
+  }
+  private frames: number[] = []
   protected w = 0
   protected h = 0
   protected onStateChange?: EngineOptions['onStateChange']
@@ -69,6 +80,7 @@ export class Engine {
   private initialState = {
     ready: false,
     running: false,
+    fps: 0,
     playerDistance: 0,
     playerCollisions: 0,
     playerSpeed: 0,
@@ -102,7 +114,7 @@ export class Engine {
     this.h = options.height
     this.canvas.width = options.width
     this.canvas.height = options.height
-    this.ctx = this.canvas.getContext('2d')!
+    this.ctx = this.canvas.getContext('2d', { alpha: false })!
     this.onStateChange = options.onStateChange
     this.onCollide = options.onCollide
     this.onGameOver = options.onGameOver
@@ -227,27 +239,43 @@ export class Engine {
     this.ctx.clearRect(0, 0, this.w, this.h)
   }
 
-  protected update() {
-    this.clear()
-    if (this.state.ready) {
-      this.updateBackground()
-      this.updateGroudObjects()
-      this.updateSkyObjects()
-      this.updatePlayer()
-      const skyObject = this.checkCollision()
-      if (skyObject) {
-        switch (skyObject.type) {
-          case 'SPEED_DECRESE':
-            this.player.collide()
-            skyObject.crash()
-            break
-          case 'SPEED_BOOST':
-            this.player.boost(2)
-            skyObject.crash()
-            break
+  protected update() {   
+    requestAnimationFrame(this.update.bind(this))
+    this.framerateControl.now = performance.now()
+    if (this.frames.length === 0) {
+      this.frames = '.'.repeat(60).split('.').map((_, i) => this.framerateControl.now - 1000 / i)
+    }
+    this.framerateControl.elapsed = this.framerateControl.now - this.framerateControl.then
+    if (this.framerateControl.elapsed > this.framerateControl.target) {
+      while (this.frames.length > 0 && this.frames[0] <= this.framerateControl.now - 1000) {
+        this.frames.shift()
+      }
+      this.frames.push(this.framerateControl.now)
+      if (this.frames.length) {
+        this.state.fps = this.frames.length
+      }
+      if (this.state.ready) {
+        
+        this.clear()
+        this.updateBackground()
+        this.updateGroudObjects()
+        this.updateSkyObjects()
+        this.updatePlayer()
+        const skyObject = this.checkCollision()
+        if (skyObject) {
+          switch (skyObject.type) {
+            case 'SPEED_DECRESE':
+              this.player.collide()
+              skyObject.crash()
+              break
+            case 'SPEED_BOOST':
+              this.player.boost(2)
+              skyObject.crash()
+              break
+          }
         }
       }
+      this.framerateControl.then = this.framerateControl.now - (this.framerateControl.elapsed % this.framerateControl.target);
     }
-    requestAnimationFrame(this.update.bind(this))
   }
 }

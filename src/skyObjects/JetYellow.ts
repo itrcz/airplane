@@ -32,7 +32,7 @@ export class JetYellow extends SkyObject {
     this.engine.ctx.save()
     const { img } = this.propeller
     this.engine.ctx.translate(this.x + 8, this.y + 40)
-    this.engine.ctx.rotate(Math.PI / 180 * (this.propellerAngle += this.speed * 10))
+    this.engine.ctx.rotate(Math.PI / 180 * (this.propellerAngle += this.speed * 4))
     this.engine.ctx.drawImage(img, -img.width / 2, -img.height / 2, img.width, img.height)
     this.engine.ctx.restore()
   }

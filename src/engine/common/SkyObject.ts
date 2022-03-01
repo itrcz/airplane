@@ -19,7 +19,7 @@ export class SkyObject extends Sprite {
   static SkyObject = ({ 
     SkyObject: (engine: Engine, options: SkyObjectOptions) => new SkyObject(engine, options)
   })
-  speed = 4
+  speed = 8
   verticalSpeed = 0
   initialDelay = 0
   delay = 0
@@ -71,10 +71,10 @@ export class SkyObject extends Sprite {
     }
     if (x > -img.width) {
       if (bouncing && !this.crashing) {
-        y = y + Math.sin(x / 80) * 10
+        y = y + Math.sin(x / 80) * 20
       }
       this.engine.ctx.drawImage(img, x, y, img.width, img.height)
-      this.x += -(this.speed + this.engine.player.speed / 2)
+      this.x += -(this.speed + this.engine.player.speed)
     } else {
       this.delay--
     }

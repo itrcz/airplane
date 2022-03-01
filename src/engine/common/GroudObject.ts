@@ -41,8 +41,9 @@ export class GroudObject extends Sprite {
   update() {
     const { img, x , y } = this
     if (x > -img.width) {
-      this.engine.ctx.drawImage(img, x, y, img.width, img.height)
-      this.x += -this.engine.player.speed * this.speedMultiplexor
+      this.x -= -(2 * this.speedMultiplexor + this.engine.player.speed)
+      this.engine.ctx.drawImage(img, Math.round(x), y, img.width, img.height)
+      this.x += -10 - this.engine.player.speed
     } else {
       this.delay--
     }
