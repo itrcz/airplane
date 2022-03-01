@@ -184,7 +184,7 @@ export class Engine {
     this.reset()
     const { player, map } = resources
     const { backgrounds, skyObjects, groudObjects} = map
-    this.player = this.classes[player.class](this)
+    this.player = this.classes[player.class](this, player)
     this.backgrounds = backgrounds.map((options) => this.classes[options.class](this, options))
     this.skyObjects = skyObjects.map((options) => this.classes[options.class](this, options))
     this.groudObjects = groudObjects.map((options) => this.classes[options.class](this, options))
