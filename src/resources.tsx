@@ -12,12 +12,11 @@ export const gameMaps: EngineResources['map'][] = [
     id: '1',
     name: 'Mountains',
     backgrounds: [
-      { class: 'Background', src: '/assets/hills_01.svg', height: 600, static: true },
-      { class: 'Background', src: '/assets/hills_02.svg', height: 200 },
-      { class: 'Background', src: '/assets/hills_03.svg', height: 150, speedMultiplexor: 1.5 },
-      { class: 'Background', src: '/assets/hills_04.svg', height: 450, speedMultiplexor: 1.3, opacity: 0.2 },
-      { class: 'Background', src: '/assets/hills_05.svg', height: 23 },
-      { class: 'Background', src: '/assets/hills_05.svg', height: 23 }
+      { class: 'BackgroundLayer', src: '/assets/hills_01.svg', height: 600 },
+      { class: 'BackgroundLayer', src: '/assets/hills_02.svg', height: 200, speed: 1, },
+      { class: 'BackgroundLayer', src: '/assets/hills_03.svg', height: 150, speed: 2 },
+      { class: 'BackgroundLayer', src: '/assets/hills_04.svg', height: 450, speed: 3, opacity: 0.2, blur: 5 },
+      { class: 'BackgroundLayer', src: '/assets/hills_05.svg', height: 23 },
     ],
     skyObjects: [
       { class: 'JetYellow', delay: 50 },
@@ -34,9 +33,9 @@ export const gameMaps: EngineResources['map'][] = [
     id: '2',
     name: 'City',
     backgrounds: [
-      { class: 'Background', src: '/assets/city_01.svg', height: 600 },
-      { class: 'Background', src: '/assets/city_02.svg', height: 340 },
-      { class: 'Background', src: '/assets/city_03.svg', height: 300, speedMultiplexor: 1.2 },
+      { class: 'BackgroundLayer', src: '/assets/city_01.svg', height: 600 },
+      { class: 'BackgroundLayer', src: '/assets/city_02.svg', height: 340, speed: 1 },
+      { class: 'BackgroundLayer', src: '/assets/city_03.svg', height: 300, speed: 2 },
     ],
     skyObjects: [
       { class: 'JetYellow', delay: 50 },

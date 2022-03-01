@@ -65,7 +65,7 @@ export class SkyObject extends Sprite {
 
   go() {
     const screenEdgePadding = 10
-    this.verticalSpeed = (utils.rnd(0, 150) - 150) / 150
+    this.verticalSpeed = (utils.rnd(0, 140) - 70) / 140
     this.y = utils.rnd(
       screenEdgePadding,
       this.engine.canvas.height - this.img.height - screenEdgePadding,
@@ -117,7 +117,7 @@ export class SkyObject extends Sprite {
       }
       this.engine.ctx.drawImage(img, x, y, img.width, img.height)
       this.engine.ctx.restore()
-      this.x += -(this.speed + this.engine.player.speed)
+      this.x += -(this.speed + this.verticalSpeed + this.engine.player.speed * 2)
     } else {
       this.collect()
       this.delay--

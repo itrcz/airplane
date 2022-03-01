@@ -8,12 +8,12 @@ let engine: Engine
 
 function App() {
   const [engineState, setEngineState] = useState<EngineState | null>(null)
-  const ref = useRef<HTMLCanvasElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     engine = new Engine({
       debug: true,
-      canvas: ref.current!,
+      container: ref.current!,
       width: 800,
       height: 600,
       onStateChange: (state) => {
@@ -26,7 +26,7 @@ function App() {
     <Viewport>
       <Flexbox column centered mt="m">
         <Block shadow="m" w="50rem" h="37.5rem" overflow="hidden" borderRadius="xl">
-          <canvas ref={ref} />
+          <div ref={ref} />
           <GameOverlay engine={engine} state={engineState} />
         </Block>
       </Flexbox>
