@@ -13,6 +13,11 @@ export type EngineState = {
    */
   ready: boolean
   /**
+   * Resources is loading
+   * [0] - how many loaded, [1] awaiting resources
+   */
+  loading: number[]
+  /**
    * Game is running
    */
   running: boolean
@@ -86,6 +91,7 @@ export class Engine {
   protected onCollide?: EngineOptions['onCollide']
   private initialState = {
     ready: false,
+    loading: [0, 0],
     running: false,
     fps: 0,
     playerDistance: 0,
@@ -192,7 +198,12 @@ export class Engine {
   }
 
   protected resourcesLoad() {
-    if (this.sprites.every((sprite) => sprite.ready)) {
+    this.state.loading = [
+      this.sprites.filter((sprite) => sprite.ready).length,
+      this.sprites.length,
+    ]
+
+    if (this.state.loading[0] === this.state.loading[1]) {
       this.state.ready = true
       this.log('Resoruces ready')
     } else {
