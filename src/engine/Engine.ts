@@ -5,7 +5,7 @@ import { Background, BackgroundOptions } from './common/Background'
 import { GroudObject, GroudObjectOptions } from './common/GroudObject'
 import { Player } from './common/Player'
 import { SkyObject, SkyObjectOptions } from './common/SkyObject'
-import { Sprite } from './common/Sprite'
+import { Sprite, SpriteOptions } from './common/Sprite'
 
 export type EngineState = {
   /**
@@ -46,11 +46,18 @@ type EngineClass = {
   class: string
 }
 
+type EngineClassIdName = {
+  id: string
+  name: string
+}
+
 export type EngineResources = {
-  player: EngineClass
-  backgrounds: Array<EngineClass & BackgroundOptions>
-  groudObjects: Array<EngineClass & GroudObjectOptions>
-  skyObjects: Array<EngineClass & SkyObjectOptions>
+  player: EngineClass & EngineClassIdName & SpriteOptions
+  map: EngineClassIdName & {
+    backgrounds: Array<EngineClass & BackgroundOptions>
+    groudObjects: Array<EngineClass & GroudObjectOptions>
+    skyObjects: Array<EngineClass & SkyObjectOptions>
+  }
 }
 
 export type EngineOptions = {
@@ -175,7 +182,8 @@ export class Engine {
   init(resources: EngineResources) {
     this.log('Loading resources')
     this.reset()
-    const { player, backgrounds, skyObjects, groudObjects} = resources
+    const { player, map } = resources
+    const { backgrounds, skyObjects, groudObjects} = map
     this.player = this.classes[player.class](this)
     this.backgrounds = backgrounds.map((options) => this.classes[options.class](this, options))
     this.skyObjects = skyObjects.map((options) => this.classes[options.class](this, options))
