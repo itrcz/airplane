@@ -42,6 +42,14 @@ export type EngineState = {
    */
   playerVerticalSpeed: number
   /**
+   * Player did pass sky objects
+   */
+  playerPassSkyObject: number
+  /**
+   * lives
+   */
+  hearts: number
+  /**
    * Is game over
    */
   gameOver: boolean
@@ -98,9 +106,12 @@ export class Engine {
     playerCollisions: 0,
     playerSpeed: 0,
     playerVerticalSpeed: 0,
+    playerPassSkyObject: 0,
+    hearts: 3,
     gameOver: false,
+
   }
-  protected state: EngineState = { ...this.initialState }
+  state: EngineState = { ...this.initialState }
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
 
@@ -145,8 +156,20 @@ export class Engine {
 
   protected control(state: boolean) {
     if (this.state.ready && !this.state.gameOver) {
+      if (this.state.hearts <= 0 && state) {
+        this.log(`No hearts to control UP`)
+        return
+      }
       this.player.goUp(state)
       this.log(`Control ${state ? 'UP' : 'DOWN'}`)
+    }
+  }
+
+  setHearts(hearts: number) {
+    if (hearts) {
+      this.state.hearts = hearts
+    } else {
+      this.state.hearts = 0
     }
   }
   
@@ -266,7 +289,7 @@ export class Engine {
     }
     this.framerateControl.elapsed = this.framerateControl.now - this.framerateControl.then
     if (this.framerateControl.elapsed > this.framerateControl.target) {
-      while (this.frames.length > 0 && this.frames[0] <= this.framerateControl.now - 1000) {
+      while (this.frames.length > 0 && this.frames[0] <= this.framerateControl.now - 990) {
         this.frames.shift()
       }
       this.frames.push(this.framerateControl.now)
@@ -284,6 +307,7 @@ export class Engine {
         if (skyObject) {
           switch (skyObject.type) {
             case 'SPEED_DECRESE':
+              this.setHearts(this.state.hearts - 1)
               this.player.collide()
               skyObject.crash()
               break

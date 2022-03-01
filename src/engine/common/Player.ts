@@ -1,13 +1,26 @@
-import { Sprite } from './Sprite'
+import { Engine } from '../Engine'
+import { Sprite, SpriteOptions } from './Sprite'
+
 
 export class Player extends Sprite {
+  static Player = {
+    Player: (engine: Engine, options: SpriteOptions) => new Player(engine, options),
+  }
+
   crashed = false
-  speed = 0.5
+
+  speed = 0.3
+
   maxSpeed = 3
+
   acceleration = 0.001
+
   verticalSpeed = 1
+
   x = 40
+
   y = 0
+
   private up = false
 
   get bounds() {
@@ -15,7 +28,7 @@ export class Player extends Sprite {
       x: this.x,
       y: this.y,
       w: this.img.width,
-      h: this.img.height
+      h: this.img.height,
     }
   }
 
@@ -24,18 +37,18 @@ export class Player extends Sprite {
   }
 
   collide() {
-    this.speed -= this.acceleration * 800
+    this.speed -= this.acceleration * 200
   }
 
   boost(multiply = 1) {
-    this.speed += this.acceleration * 10000 * (multiply || 1)
+    this.speed += this.acceleration * 1000 * (multiply || 1)
 
     if (this.speed > this.maxSpeed) {
       this.speed = this.maxSpeed
-    } 
+    }
   }
 
-  update() {    
+  update() {
     if (this.speed === 0 && this.verticalSpeed === 0) {
       this.crashed = true
       return
@@ -77,7 +90,7 @@ export class Player extends Sprite {
     }
 
     this.speed += this.acceleration
-    
+
     /**
      * Reset speed to zero if it less then 0
      */
@@ -93,24 +106,24 @@ export class Player extends Sprite {
         this.verticalSpeed += 0.3
       }
     }
-    
+
     // Moving airplane down
     if (this.y < this.engine.canvas.height && this.verticalSpeed > 0) {
       this.y += this.verticalSpeed
     }
- 
+
     if (this.speed > this.maxSpeed) {
       this.speed = this.maxSpeed
     }
-    
+
     /**
      * Saving state for correct rotation
      */
-     const { width, height } = this.img
-     this.engine.ctx.save()
-     this.engine.ctx.translate(this.x + 100 , this.y + 60)    
-     this.engine.ctx.rotate(Math.PI / 180 * this.verticalSpeed * 2)
-     this.engine.ctx.drawImage(this.img, -width / 2, -height / 2, width, height)
-     this.engine.ctx.restore()
+    const { width, height } = this.img
+    this.engine.ctx.save()
+    this.engine.ctx.translate(this.x + 100, this.y + 60)
+    this.engine.ctx.rotate((Math.PI / 180) * this.verticalSpeed * 2)
+    this.engine.ctx.drawImage(this.img, -width / 2, -height / 2, width, height)
+    this.engine.ctx.restore()
   }
 }
